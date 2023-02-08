@@ -288,6 +288,14 @@ plt.title("My Improved Regression Model")
 plt.xlabel("epochs")
 plt.show() #plot of my models performance
 
+preds = [model(tf.constant(data.val.values, dtype=tf.float32))
+         for model in models]
+# Taking exponentiation of predictions in the logarithm scale
+ensemble_preds = tf.reduce_mean(tf.exp(tf.concat(preds, 1)), 1)
+submission = pd.DataFrame({'Id':data.raw_val.Id,
+                           'SalePrice':ensemble_preds.numpy()})
+submission.to_csv('submission.csv', index=False)
+
 #*******************************************************************************************
 #Trying the regression with a model using weight decay.
 
